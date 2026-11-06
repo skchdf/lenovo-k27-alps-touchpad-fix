@@ -1,0 +1,43 @@
+# Lenovo ZHAOYANG K27 (2011) - AlpsPS/2 ALPS GlidePoint
+#
+# Symptom: vertical pointer movement is faster than horizontal; a physical
+# circle drawn on the touchpad becomes a tall ellipse on screen.
+#
+# Root cause: the kernel reports resolution=0 for every ABS axis. libinput
+# therefore has no physical size and (a) uses this size hint if present,
+# otherwise (b) tp_init_default_resolution() assumes a 69x50mm touchpad.
+# The axis ranges are 1024 x 448 and libinput stores the resolution as an
+# INTEGER units/mm, so the reachable res_x/res_y ratios are coarse fractions:
+#
+#   no quirk             -> res 14/8  = 1.750  (vertical ~50% fast)
+#   AttrSizeHint=100x55  -> res 10/8  = 1.250  (measured 1.07, 7% fast)
+#   AttrSizeHint=100x51  -> res 10/8  = 1.250  (no change: 448/51 -> 8)
+#   AttrSizeHint=72x36   -> res 14/12 = 1.1667 (chosen, circle ~1.00)
+#
+# Why 72x36: with the 100x55 hint the measured circle ratio (height/width)
+# was 1.07. The ratio scales linearly with res_x/res_y, so the required
+# ratio is 1.25 / 1.07 = 1.168. 14/12 = 1.1667 is the closest integer pair.
+# The real touchpad aspect works out to ~1.96:1, i.e. roughly 73x37 mm.
+#
+# Tuning: the circle shape depends only on
+#     res_x/res_y = floor(1024/W) / floor(448/H)
+# Scaling both numbers by the same factor changes overall pointer speed
+# only (larger numbers = slower pointer); the KDE pointer-speed slider can
+# compensate. To make vertical faster, increase res_x/res_y (lower H).
+#
+# Verify:
+#   sudo libinput quirks list /dev/input/event11
+#     -> ModelALPSSerialTouchpad=1 / AttrSizeHint=72x36
+#   sudo libinput list-devices | grep -A6 GlidePoint
+#     -> Size: 73x37mm
+#
+# Installed at /etc/libinput/local-overrides.quirks (root:root 644).
+# Restart KWin (or re-login) after changing this file.
+
+[ALPS K27 GlidePoint Size Hint]
+MatchUdevType=touchpad
+MatchBus=ps2
+MatchVendor=0x0002
+MatchProduct=0x0008
+MatchDMIModalias=dmi:*svnLENOVO:*pnZHAOYANGK27*
+AttrSizeHint=72x36
