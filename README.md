@@ -118,6 +118,7 @@ systemctl --user restart plasma-kwin_wayland
 ```
 .
 ├── README.md                      # 本文件：症状、原理、安装、校准
+├── MACHINE.md                     # 本机完整参数（重装后免测量，直接用）
 ├── circletest.html                # 离线圆形比例测量页
 ├── quirk/
 │   └── local-overrides.quirks     # 最终可用的 libinput quirk
@@ -140,6 +141,7 @@ systemctl --user restart plasma-kwin_wayland
 
 ## 相关
 
+- **本机完整参数（重装后照做即可，无需测量）：[MACHINE.md](MACHINE.md)**
 - 详细推导与源码分析：[docs/diagnosis.md](docs/diagnosis.md)
 - 慢网络下装 Edge 的完整踩坑记录：[docs/edge-on-arch-slow-network.md](docs/edge-on-arch-slow-network.md)
 - AI 诊断提示词模板：[PROMPTS.md](PROMPTS.md)
