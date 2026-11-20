@@ -17,8 +17,10 @@ B: PROP=9
 B: EV=b
 ```
 
-- PS/2 接口（i8042，`serio4`），semi-MT（`PROP=9` 表示
-  `INPUT_PROP_BUTTONPAD` 之外还有半多点能力）。
+- PS/2 接口（i8042，`serio4`），属性位 `PROP=9` =
+  `INPUT_PROP_POINTER`(bit0) + `INPUT_PROP_SEMI_MT`(bit3)，即半多指触控
+  （注意 `INPUT_PROP_BUTTONPAD` 位并没有置位）。`input17`/`event11` 是
+  诊断时的编号，重装或换内核后会变，以当前 `grep` 输出为准。
 - `vendor=0x0002 product=0x0008`，即 ALPS 串口触控板。
 
 ### 坐标轴与分辨率
@@ -26,13 +28,15 @@ B: EV=b
 用 `scripts/absinfo.c`（直接 `EVIOCGABS` ioctl）读取：
 
 ```
-ABS_0  (ABS_X):               min=0 max=1024 range=1024 res=0
-ABS_1  (ABS_Y):               min=0 max=448  range=448  res=0
-ABS_24 (ABS_PRESSURE):        min=0 max=127  range=127  res=0
-ABS_47 (ABS_MT_SLOT):         min=0 max=3    range=3    res=0
-ABS_53 (ABS_MT_POSITION_X):   min=0 max=1024 range=1024 res=0
-ABS_54 (ABS_MT_POSITION_Y):   min=0 max=448  range=448  res=0
-ABS_57 (ABS_MT_TRACKING_ID):  min=0 max=65535           res=0
+$ sudo ./absinfo /dev/input/event11
+/dev/input/event11: AlpsPS/2 ALPS GlidePoint
+ABS_0 (ABS_X)                  min=0      max=1024   range=1024   fuzz=0   flat=0   res=0
+ABS_1 (ABS_Y)                  min=0      max=448    range=448    fuzz=0   flat=0   res=0
+ABS_24 (ABS_PRESSURE)          min=0      max=127    range=127    fuzz=0   flat=0   res=0
+ABS_47 (ABS_MT_SLOT)           min=0      max=3      range=3      fuzz=0   flat=0   res=0
+ABS_53 (ABS_MT_POSITION_X)     min=0      max=1024   range=1024   fuzz=0   flat=0   res=0
+ABS_54 (ABS_MT_POSITION_Y)     min=0      max=448    range=448    fuzz=0   flat=0   res=0
+ABS_57 (ABS_MT_TRACKING_ID)    min=0      max=65535  range=65535  fuzz=0   flat=0   res=0
 ```
 
 关键点：
@@ -43,7 +47,8 @@ ABS_57 (ABS_MT_TRACKING_ID):  min=0 max=65535           res=0
 ### 软件版本
 
 ```
-kernel 7.2.14-zen1-1-zen
+kernel 7.2.14-zen1-1-zen   （诊断时；2026-11-21 用 7.3.5-zen1-1-zen 复查，
+                            坐标范围与 resolution=0 依旧，修复仍有效）
 libinput 1.32.0-1
 KDE Plasma Wayland (kwin_wayland)
 ```

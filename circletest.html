@@ -26,7 +26,7 @@ canvas{display:block;width:100%;height:100%}
   操作方法：<b>按住鼠标左键</b>，在触控板上<b>慢慢画一个大圆</b>（一圈即可），<b>松开</b>。<br>
   下方会显示轨迹的 <b>竖向长度 ÷ 横向长度</b> 比值。≈1.00 就是正圆。
 </div>
-<div id="btn" onclick="clear()">清空重来</div>
+<div id="btn">清空重来</div>
 <div id="log"></div>
 <div id="result"></div>
 <script>
@@ -36,7 +36,7 @@ const log=document.getElementById('log');
 const res=document.getElementById('result');
 let on=false,sx,sy,mnx,mxx,mny,mxy,pts=[],raf=null;
 
-function fit(){cv.width=innerWidth;cv.height=innerHeight}
+function fit(){cv.width=innerWidth;cv.height=innerHeight;draw()}
 fit();onresize=fit;
 
 function draw(){
@@ -101,15 +101,19 @@ cv.onmousedown=md;cv.onmousemove=mm;cv.onmouseup=mu;cv.onmouseleave=mu;
 cv.ontouchstart=td;cv.ontouchmove=tm;cv.ontouchend=tu;
 cv.ontouchcancel=tu;
 
-function clear(){
+// 注意：不要叫 clear() 并用 onclick="clear()" 内联调用——内联事件处理器的
+// 作用域链里有 document，而遗留的 document.clear()（DOM0 空操作）会把
+// window.clear 遮住，导致按钮点了没反应。这里改用 addEventListener。
+function resetAll(){
   pts=[];on=false;
   ctx.fillStyle='#111';ctx.fillRect(0,0,cv.width,cv.height);
   document.getElementById('btn').textContent='清空重来';
   res.textContent='按住画圆';res.style.color='#fff';
 }
+document.getElementById('btn').addEventListener('click',resetAll);
 
 log.textContent='ready — 事件: mouse'+('onmousedown' in cv)+' | touch'+('ontouchstart' in cv);
-clear();
+resetAll();
 </script>
 </body>
 </html>

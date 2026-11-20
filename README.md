@@ -17,7 +17,7 @@
 | 项目 | 值 |
 |---|---|
 | 机型 | Lenovo ZHAOYANG K27（昭阳 K27，2011，Legacy BIOS） |
-| 系统 | Arch Linux（kernel `7.2.14-zen1-1-zen`，libinput `1.32.0`） |
+| 系统 | Arch Linux，kernel `linux-zen`（验证于 `7.2.14` 与 `7.3.5`），libinput `1.32.0` |
 | 桌面 | KDE Plasma **Wayland**（kwin_wayland） |
 | 触控板 | `AlpsPS/2 ALPS GlidePoint`，PS/2（i8042 serio4），semi-MT |
 | 设备 ID | bus `0x0011`(i8042) / vendor `0x0002` / product `0x0008` / version `0x0500` |
@@ -37,6 +37,14 @@
 等比例还原运动。
 
 ## 安装（重装系统后照做）
+
+一键安装（内部会先验证 quirk 语法、备份旧文件、重启 KWin）：
+
+```bash
+./scripts/install.sh
+```
+
+手动步骤等价于：
 
 ```bash
 # 1. 放 quirk 文件

@@ -1,6 +1,6 @@
 # 本机参数（Lenovo ZHAOYANG K27）
 
-> 最后核实：**2026-11-06**
+> 最后核实：**2026-11-21**
 > 用途：重装系统后照本文件直接恢复触控板修复，**不需要重新测量**。
 > 若硬件或内核大变（例如换了触控板、内核坐标范围变了），再按
 > [docs/diagnosis.md](docs/diagnosis.md) 重新推导。
@@ -15,8 +15,8 @@
 | CPU | Intel Pentium B970 @ 2.30 GHz（2 核 2 线程，Sandy Bridge） |
 | 内存 | 3.7 GiB + zram0（1.8 G swap） |
 | 显卡 | Intel Sandy Bridge 核显（mesa / libva-intel-driver） |
-| 磁盘 | `/dev/sda` 298.1 G：`sda1` 148.1G NTFS、`sda3` 40G ext4、`sda4` 10G ext4（data）、`sda5` 100G ext4（`/`） |
-| 系统 | Arch Linux，kernel `7.2.14-zen1-1-zen`，KDE Plasma `6.8.2`（Wayland / kwin_wayland） |
+| 磁盘 | `/dev/sda` 298.1 G：`sda1` 148.1G NTFS（Windows）、`sda3` 40G ext4（`/`）、`sda4` 10G ext4（data，未挂载）、`sda5` 100G NTFS（未挂载） |
+| 系统 | Arch Linux，kernel `7.3.5-zen1-1-zen`，KDE Plasma `6.8.3`（Wayland / kwin_wayland） |
 | libinput | `1.32.0-1` |
 | 输入设备组 | `LIBINPUT_DEVICE_GROUP=11/2/8:isa0060/serio4` |
 
@@ -28,7 +28,7 @@
 | 设备节点 | `/dev/input/event11`（**编号可能随重装/内核变化**，用 `libinput list-devices` 查） |
 | 物理路径 | `isa0060/serio4/input0`（PS/2 / i8042） |
 | ID | bus `0x0011`（i8042） / vendor `0x0002` / product `0x0008` / version `0x0500` |
-| 能力 | `PROP=9`（semi-MT），`Handlers=event11 mouse1` |
+| 能力 | `PROP=9`（`INPUT_PROP_POINTER` + `INPUT_PROP_SEMI_MT`），`Handlers=event11 mouse1` |
 
 ### 坐标轴（`EVIOCGABS` 实测）
 
